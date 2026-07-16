@@ -2590,7 +2590,7 @@ if(activePlot){
         <div class="section-title">Trees Entered — Plot ${activePlot.plot_id}<span class="count-badge">${plotTrees.length} tree${plotTrees.length===1?'':'s'}</span></div>
         ${plotTrees.length?`
         <table>
-          <tr><th>Tree #</th><th>Species</th><th>Status</th><th>${activeStand.dbh_mode==='idbh'?'IDBH':'DBH'}</th><th>Ht</th><th>CR</th><th>Count</th><th>Age</th><th>Dmg 1</th><th>Dmg 2</th><th></th></tr>
+          <tr><th>Tree #</th><th>Species</th><th>Status</th><th>DBH</th><th>Ht</th><th>CR</th><th>Count</th><th>Age</th><th>Dmg 1</th><th>Dmg 2</th><th></th></tr>
           ${plotTrees.map(t=>{const sp=spList.find(x=>x[0]===t.species);return `
           <tr${ui.editingTree===t.tree_key?' style="background:#eef5ee;"':''}>
             <td><strong>${t.tree_id}</strong>${seedlingSaplingIcon(t,activeStand)}</td>
