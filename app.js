@@ -2714,7 +2714,6 @@ WL  western larch"></textarea>
           if(trees.length){
             html+=`<table><tr><th>#</th><th>Sp</th><th>Status</th><th>DBH</th><th>Ht</th><th>CR%</th><th>Count</th></tr>
               ${trees.map(t=>`<tr><td><span class="tree-num-cell"><span class="tree-num">${t.tree_id}</span><span class="tree-num-icon">${seedlingSaplingIcon(t,s)}</span></span></td><td>${t.species}</td><td>${t.status}</td><td>${escapeHTML(formatTreeDbhValue(t.dbh))}</td><td>${t.ht}</td><td>${t.crown_ratio}</td><td>${t.count||1}</td></tr>`).join("")}</table>`;
-</table>`;
           }
           html+=`</div>`;
         });
