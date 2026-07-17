@@ -2359,7 +2359,7 @@ function damageOptions(variant, sel){
 }
 function crownRatioOptions(sel){
   // Keep the numeric FVS code as the stored/exported value, but show only the percentage range.
-  return `<option value="">—select—</option>`+CROWN_RATIO_CODES.map(([c,n])=>`<option value="${c}" ${String(sel)===String(c)?'selected':''}>${n}</option>`).join("");
+  return `<option value="">select</option>`+CROWN_RATIO_CODES.map(([c,n])=>`<option value="${c}" ${String(sel)===String(c)?'selected':''}>${n}</option>`).join("");
 }
 function aspectOptions(sel){
   return `<option value="">— select —</option>`+ASPECT_CODES.map(([c,n])=>`<option value="${c}" ${String(sel)===String(c)?'selected':''}>${n}</option>`).join("");
@@ -2599,7 +2599,7 @@ if(activePlot){
           </div>
           <div class="field" id="t_species_other_wrap" style="display:none;flex:0 0 90px;"><label>Custom</label><input id="t_species_other" placeholder="code"></div>
           <div class="field" style="flex:0 0 90px;"><label for="t_status">Status</label>
-            <select id="t_status" onchange="updateAddTreeDbhRequirement()"><option value="" ${et?'':'selected'}>—select—</option><option value="live" ${et&&et.status==='live'?'selected':''}>Live</option><option value="dead" ${et&&et.status==='dead'?'selected':''}>Dead</option></select>
+            <select id="t_status" onchange="updateAddTreeDbhRequirement()"><option value="" ${et?'':'selected'}>select</option><option value="live" ${et&&et.status==='live'?'selected':''}>Live</option><option value="dead" ${et&&et.status==='dead'?'selected':''}>Dead</option></select>
           </div>
           <div class="field" style="flex:0 0 74px;"><label for="t_dbh">${activeStand.dbh_mode==='idbh'?'IDBH':'DBH'}<span id="t_dbh_required" class="live-dbh-required" hidden> · required for Live</span></label><input id="t_dbh" type="number" aria-required="false" value="${escapeAttr(dbhFieldValue)}" ${activeStand.dbh_mode==='idbh'?`min="1" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');updateAddTreeDbhRequirement()"`:`min="0.1" step="0.1" oninput="updateAddTreeDbhRequirement()"`}></div>
           <div class="field" style="flex:0 0 74px;"><label>Height</label><input id="t_ht" type="number" min="1" step="1" value="${et&&et.ht?escapeAttr(et.ht):''}"></div>
@@ -2713,8 +2713,8 @@ WL  western larch"></textarea>
           html+=`<div class="plotcard"><strong>Plot ${p.plot_id}</strong> <span class="muted">${trees.length} trees</span>`;
           if(trees.length){
             html+=`<table><tr><th>#</th><th>Sp</th><th>Status</th><th>DBH</th><th>Ht</th><th>CR%</th><th>Count</th></tr>
-              ${trees.map(t=>`<tr><td><span class="tree-num-cell"><span class="tree-num">${t.tree_id}</span><span class="tree-num-icon">${seedlingSaplingIcon(t,s)}</span></span></td>
-<td>${escapeHTML(formatTreeDbhValue(t.dbh))}</td><td>${t.ht}</td><td>${t.crown_ratio}</td><td>${t.count||1}</td></tr>`).join("")}</table>`;
+              ${trees.map(t=>`<tr><td><span class="tree-num-cell"><span class="tree-num">${t.tree_id}</span><span class="tree-num-icon">${seedlingSaplingIcon(t,s)}</span></span></td><td>${t.species}</td><td>${t.status}</td><td>${escapeHTML(formatTreeDbhValue(t.dbh))}</td><td>${t.ht}</td><td>${t.crown_ratio}</td><td>${t.count||1}</td></tr>`).join("")}</table>`;
+</table>`;
           }
           html+=`</div>`;
         });
