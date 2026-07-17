@@ -1,10 +1,55 @@
 # plOtter: Stand Exam for FVS — Browser/PWA build
 
-## Revision 1.8.0
+## Revision 1.8.4
 
 This folder contains the mobile-compatible plOtterFVS Progressive Web App. The same static application runs in Safari on iPhone and iPad, Chrome on Android, and current desktop browsers. It does not require the original Windows `.cmd` or `.vbs` launchers.
 
-## Changes in revision 1.8.0
+## Changes in revision 1.8.4
+
+### Edit an entered tree
+
+- Each row in **Trees Entered** now has an edit (✎) control alongside the delete (✕) control.
+- Selecting edit loads that tree back into the tree-entry form, which switches to an **Edit Tree #N** mode: the primary button becomes **Save Changes** and a **Cancel** button appears.
+- The row being edited is highlighted, and an in-form note identifies the tree under edit.
+- Saving updates the existing record in place — the tree keeps its original tree number and position rather than being re-added at the end.
+- Cancel, switching plots or stands, changing tabs, or deleting the edited tree all discard the edit without changing the saved record.
+- IDBH stands prefill the DBH field with the integer value the user originally entered (the stored Actual DBH is multiplied back by 10 for display), so edits round-trip correctly.
+
+### Inline field help
+
+- Small **?** help buttons now appear next to **PV Code / PV Ref**, **Ecoregion**, **Site Species**, and **Site Index**. Tapping one toggles a short explanatory note.
+- PV Code, PV Ref, and Ecoregion note that the habitat code is optional and to consult the appropriate FVS Variant Guide.
+- Site Species and Site Index note that the pair is optional and must be entered together or left blank.
+- A live **DBH Entry Mode** hint under the RealDBH / IDBH toggle shows an example of how a 5.0-inch tree is entered in the selected mode.
+
+### Stronger input validation
+
+Saving Stand Info and adding trees now enforce clearer rules and focus the offending field with a message:
+
+- **Site Species and Site Index** must be entered together or both left blank; Site Index must be a whole number of 1 or greater.
+- **Elevation** must be blank or 1 or greater and is labeled *actual*; **Slope** (Stand Info and per-plot) cannot be negative.
+- **DBH Break** cannot be negative; a negative entry is treated as 0.0.
+- **Tree DBH** has a minimum: in RealDBH mode, 0.1 (enter 0.1 for seedlings/saplings under 4.5 ft tall); in IDBH mode, 1 (enter 1 for seedlings/saplings under 4.5 ft tall).
+- **Count, Height, and Age** remain optional but must be 1 or greater when entered.
+- A species must be chosen before a tree can be added (the **Search…** placeholder is not accepted as a species).
+
+### Damage severity behavior
+
+- **Severity** now appears only for damage codes that use it:
+  - Dwarf mistletoe codes 30–34 show the 1–6 class dropdown.
+  - Percent-defect codes 25–29 show a 0–100 numeric percent input.
+  - All other damage codes hide Severity entirely.
+- This applies to both Dmg 1 / Sev 1 and Dmg 2 / Sev 2. Stored values and the FVS export schema are unchanged.
+
+### Export list detail
+
+- The **Select Stands to Export** list now shows each stand's collection date (formatted, timezone-safe) alongside plot count and Variant.
+
+### Compatibility
+
+Revision 1.8.4 retains data schema version 5 and does not change the FVS export workbook or CSV schemas.
+
+## Features retained from revision 1.8.0
 
 ### FVS Variant map boundaries
 
@@ -24,12 +69,8 @@ This folder contains the mobile-compatible plOtterFVS Progressive Web App. The s
 
 - Stand Info uses **Tally Trees:** and **Regen Plot:** within the **Sampling Design** section.
 - The Regen Plot fixed-plot field includes the guidance: **Seedlings/Saplings with DBH less than Break DBH are measured in this plot**.
-- Each stand heading in **Review Data** now includes the plot count, tally-tree method and size, Break DBH, and Regen Plot size.
+- Each stand heading in **Review Data** includes the plot count, tally-tree method and size, Break DBH, and Regen Plot size.
 - The labels **Tally Trees:**, **Break DBH:**, and **Regen Plot:** are emphasized in the Review Data heading.
-
-### Compatibility
-
-Revision 1.8.0 retains data schema version 5 and does not change the FVS export workbook or CSV schemas.
 
 ## Features retained from revision 1.7.0
 
@@ -109,6 +150,7 @@ Two optional fields appear above Notes on Stand Info:
 
 - **Site Species** uses the selected FVS Variant's species list and exports the selected FVS species code to `SITE_SPECIES` in `FVS_StandInit`.
 - **Site Index** accepts an integer and exports to `SITE_INDEX` in `FVS_StandInit`.
+- Site Species and Site Index must be entered together or both left blank.
 - These values do not copy to `FVS_PlotInit`.
 - Blank values remain blank in export.
 - Import restores both fields from compatible StandInit data.
@@ -227,9 +269,9 @@ The application uses relative paths and works from a GitHub Pages repository sub
 
 Open the application at least once while online before testing it in airplane mode.
 
-## Upgrading from revisions 1.4.0 through 1.7.0
+## Upgrading from revisions 1.4.0 through 1.8.0
 
-Keep the same HTTPS URL and replace all application files together. Revision 1.8.0 continues to use schema version 5. Data from revisions 1.5.0 through 1.7.0 remains compatible; revision 1.4.0 data migrates as follows:
+Keep the same HTTPS URL and replace all application files together. Revision 1.8.4 continues to use schema version 5. Data from revisions 1.5.0 through 1.8.0 remains compatible; revision 1.4.0 data migrates as follows:
 
 - positive legacy `BASAL_AREA_FACTOR` values become **Variable BAF**;
 - negative imported values become tree **Fixed Plot** denominators;
@@ -242,7 +284,7 @@ Make an Excel or CSV backup before publishing the update. After deployment, open
 The service-worker cache name is:
 
 ```text
-plotter-fvs-pwa-v1.8.0
+plotter-fvs-pwa-v1.8.4
 ```
 
 ## Moving data from the original Edge file
@@ -275,22 +317,27 @@ Before operational use, test on representative iPhone/iPad and Android devices:
 1. Create a stand and confirm Location is required.
 2. Open Location normally and confirm the keyboard stays closed; then choose **Search…**, filter the list, select a result, and test Cancel.
 3. Confirm the **Sampling Design** heading, labels, three-section order, separators, and stacked mobile layout.
-4. Switch between RealDBH and IDBH and confirm DBH Break remains Actual DBH, defaults to **5.0**, and formats entries to one decimal place.
+4. Switch between RealDBH and IDBH and confirm DBH Break remains Actual DBH, defaults to **5.0**, formats entries to one decimal place, and that the live DBH-mode hint updates.
 5. Switch between Variable BAF and Fixed Plot, verify both remembered values, and confirm Fixed Plot Radius is hidden in Variable BAF mode.
 6. Verify the Regen Plot 1/n-acre radius display and its DBH Break guidance.
 7. Save Stand Info, add plots and trees, and confirm save-gating behavior.
-8. Confirm Dmg 2 and Sev 2 remain hidden until Dmg 1 is selected and clear when Dmg 1 is removed.
-9. Select Live and confirm **+ Add Tree** stays disabled until DBH/IDBH is entered; confirm Dead still permits blank DBH.
-10. Enter RealDBH `6` and IDBH `60` and confirm both display as `6.0` in Trees Entered and Review Data.
-11. Confirm each Review Data stand heading shows Tally Trees, Break DBH, and Regen Plot details.
-12. Enter trees below, equal to, and above DBH Break; confirm only below-break records show the seedling icon in Trees Entered and Review Data.
-13. Open Species normally without a keyboard, then use **Search…** deliberately.
-14. Test Site Species, integer Site Index, and one-time location permission allow/deny behavior.
-15. Confirm map pin, automatic suggestion, manual Variant/Location override, faint gray state lines, thin dark-gray FVS Variant boundaries, unchanged selected fill, and Reset.
-16. Close and reopen the app and verify records remain.
-17. Export Excel and CSV, then re-import the files.
-18. Open once online, enter airplane mode, relaunch, collect data, and export.
-19. Publish an update and confirm the service-worker update prompt works.
+8. Tap each **?** help button (PV Code / PV Ref / Ecoregion, Site Species, Site Index) and confirm the note toggles.
+9. Confirm Stand Info validation: Site Species and Site Index must be entered together; Site Index whole number ≥ 1; Elevation blank or ≥ 1; Slope not negative; DBH Break not negative.
+10. Confirm Dmg 2 and Sev 2 remain hidden until Dmg 1 is selected and clear when Dmg 1 is removed.
+11. Confirm Severity appears only for damage codes 30–34 (1–6 dropdown) and 25–29 (percent input) and is hidden for all other codes.
+12. Select Live and confirm **+ Add Tree** stays disabled until DBH/IDBH is entered; confirm Dead still permits blank DBH; confirm DBH minimums (0.1 RealDBH, 1 IDBH) and that Count, Height, and Age reject values below 1.
+13. Add a tree, then use the ✎ control to edit it: confirm the form enters Edit mode, fields prefill correctly (including IDBH round-trip), **Save Changes** updates in place keeping the tree number, and **Cancel** discards the edit.
+14. Enter RealDBH `6` and IDBH `60` and confirm both display as `6.0` in Trees Entered and Review Data.
+15. Confirm each Review Data stand heading shows Tally Trees, Break DBH, and Regen Plot details.
+16. Enter trees below, equal to, and above DBH Break; confirm only below-break records show the seedling icon in Trees Entered and Review Data.
+17. Open Species normally without a keyboard, then use **Search…** deliberately.
+18. Test Site Species, integer Site Index, and one-time location permission allow/deny behavior.
+19. Confirm map pin, automatic suggestion, manual Variant/Location override, faint gray state lines, thin dark-gray FVS Variant boundaries, unchanged selected fill, and Reset.
+20. Confirm the Export stand list shows each stand's date alongside plot count and Variant.
+21. Close and reopen the app and verify records remain.
+22. Export Excel and CSV, then re-import the files.
+23. Open once online, enter airplane mode, relaunch, collect data, and export.
+24. Publish an update and confirm the service-worker update prompt works.
 
 ## Package contents
 
